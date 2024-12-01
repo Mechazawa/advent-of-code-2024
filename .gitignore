@@ -1,3 +1,5 @@
+input.*
+
 # Created by https://www.toptal.com/developers/gitignore/api/linux,macos,windows,jetbrains,vscode,rust
 # Edit at https://www.toptal.com/developers/gitignore?templates=linux,macos,windows,jetbrains,vscode,rust
 
@@ -136,7 +138,7 @@ fabric.properties
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
 
 # Thumbnails
 ._*
