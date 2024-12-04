@@ -1,9 +1,6 @@
 #if false
 # Run this using `bash part1.c input.txt`
-o=part1
-gcc -D L="$(echo \{0,$(while read l; do echo ${l// /,},0,;done<$1)0}\;)" $o.c -o $o.out
-./$o.out
-exit
+gcc -D L="$(echo \{0,$(while read l; do echo ${l// /,},0,;done<$1)0}\;)" $0 && ./a.out;exit
 #endif
 #include <stdio.h>
 
