@@ -1,7 +1,7 @@
 #if false
-# Run this using `bash part1.c`
+# Run this using `bash part1.c input.txt`
 o=part1
-gcc -D L="$(echo \{0,$(while read l; do echo ${l// /,},0,;done<input.txt)0}\;)" $o.c -o $o.out
+gcc -D L="$(echo \{0,$(while read l; do echo ${l// /,},0,;done<$1)0}\;)" $o.c -o $o.out
 ./$o.out
 exit
 #endif
