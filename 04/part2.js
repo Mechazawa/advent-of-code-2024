@@ -1,5 +1,5 @@
 i = require('fs').readFileSync('input.txt', 'utf8');
 
 console.log(
-    g=i.split`\n`,S=(x,y,X,Y)=>g[x+X]?.[y+Y]=='M'&g[x-X]?.[y-Y]=='S',eval(g.flatMap((l,x)=>[...l].map((c,y)=>c=='A'&[1,-1].every(((X)=>S(x,y,X,1)|S(x,y,-X,-1))))).join`+`)
+    g=i.split`\n`,eval(g.flatMap((l,x)=>[...l].map((c,y)=>c=='A'&[1,-1].every((X=>/MS|SM/.test(g[x+X]?.[y+1]+g[x-X]?.[y-1]))))).join`+`)
 )
