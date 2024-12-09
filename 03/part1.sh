@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-echo $(($(grep -oE 'mul\(\d+,\d+)'<$1|tr -s ,mul \*+)))
+echo $(($(cat | grep -oE mul\\\(\\d+,\\d+\)|tr -s ,mul \*+)))
