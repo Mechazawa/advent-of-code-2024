@@ -15,13 +15,13 @@ r=g=>{
             _P=p
         }
         if(p==_P&&_S==L&&z==f) return 1
+        g[L] = f
         if (z==F) { // turn
             g[L] = d[(1 + p) % 4]
         } else if (!z || z == '\n') { // exit
             return 0
         } else { // step
             g[m[p] + L] = d[p]
-            g[L] = f
         }
     }
 }
