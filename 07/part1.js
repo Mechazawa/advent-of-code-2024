@@ -14,6 +14,7 @@ console.log(i.split`\n`.reduce((a, l, I) => {
             }
         }
     }
+
     process.stdout.write("\r[X\n")
     return a;
 }, 0))
