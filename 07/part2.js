@@ -5,8 +5,8 @@ console.log(i.split`\n`.reduce((a, l, I) => {
 
     process.stdout.write("[ ] " + (I + 1) + '\t' + l)
 
-    for (let i = 0; i < 2 ** parts.length; i++) {
-        const sum = parts.reduce((a, p, k) => i & 1 << k ? a + p : a * p,0);
+    for (let i = 0; i < 4 ** parts.length; i++) {
+        const sum = parts.reduce((a, p, k) => i & 1 << k * 2 ? a + p : i & 1 << k * 2 + 1 ? a * p : +('' + a + p), 0);
         if (sum === target) {
             process.stdout.write("\r[√\n")
             return a + sum;
