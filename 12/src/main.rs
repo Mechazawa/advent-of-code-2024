@@ -1,26 +1,19 @@
 use std::fmt::Display;
+use std::io::{stdin, Read};
 
 const MAPPED_CHAR: char = '.';
 
-#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, PartialOrd)]
 struct Point(usize, usize);
 
 impl Point {
     pub fn neighbours(&self) -> Vec<Point> {
-        let mut neighbours = Vec::new();
-
-        neighbours.push(Point(self.0 + 1, self.1));
-        neighbours.push(Point(self.0, self.1 + 1));
-
-        if self.0 > 0 {
-            neighbours.push(Point(self.0 - 1, self.1));
-        }
-
-        if self.1 > 0 {
-            neighbours.push(Point(self.0, self.1 - 1));
-        }
-
-        neighbours
+        vec![
+            Point(self.0.wrapping_sub(1), self.1),   // Up
+            Point(self.0, self.1.wrapping_sub(1)),   // Left
+            Point(self.0.saturating_add(1), self.1), // Down
+            Point(self.0, self.1.saturating_add(1)), // Right
+        ]
     }
 }
 
@@ -88,7 +81,9 @@ impl Grid {
     pub fn take_region(&mut self, start: Point) -> Option<Region> {
         let region = self.get_region(start)?;
 
-        region.points.iter()
+        region
+            .points
+            .iter()
             .for_each(|point| self.set(*point, MAPPED_CHAR));
 
         Some(region)
@@ -116,11 +111,10 @@ struct Region {
 
 impl Region {
     pub fn new(name: char) -> Self {
-        Self { name, points: Vec::new() }
-    }
-
-    pub fn price(&self) -> usize {
-        self.area() * self.perimeter()
+        Self {
+            name,
+            points: Vec::new(),
+        }
     }
 
     pub fn area(&self) -> usize {
@@ -144,20 +138,65 @@ impl Region {
 
         perimeter
     }
+
+    fn bottom_right(&self) -> Point {
+        let max_row = self.points.iter().map(|p| p.0).max().unwrap();
+        let max_col = self.points.iter().map(|p| p.1).max().unwrap();
+
+        Point(max_row, max_col)
+    }
+
+    pub fn sides(&self) -> usize {
+        let mut total_sides = 0;
+        let bottom_right = self.bottom_right();
+
+        const LEFT: usize = 1;
+        const RIGHT: usize = 3;
+
+        for direction in 0..4 {
+            let mut visited = vec![];
+
+            for point in &self.points {
+                if visited.contains(point) || self.points.contains(&point.neighbours()[direction]) {
+                    continue;
+                }
+
+                total_sides += 1;
+                visited.push(*point);
+
+                for side in &[LEFT, RIGHT] {
+                    let mut current = point.clone();
+
+                    while current <= bottom_right
+                        && self.points.contains(&current)
+                        && !self.points.contains(&current.neighbours()[direction])
+                    {
+                        visited.push(current);
+                        current = current.neighbours()[(direction + side) % 4];
+                    }
+                }
+            }
+        }
+
+        total_sides
+    }
 }
 
-
 fn main() {
-    let mut grid = Grid::from_str(include_str!("../input.txt"));
-    let mut output = 0;
+    let mut input = String::new();
+    stdin().lock().read_to_string(&mut input).unwrap();
+
+    let mut grid = Grid::from_str(&input);
+    let mut part1 = 0;
+    let mut part2 = 0;
 
     while let Some(point) = grid.find_unmapped() {
         let region = grid.take_region(point).unwrap();
 
-        println!("{} -> {} * {} = {}", region.name, region.area(), region.perimeter(), region.price());
-
-        output += region.price();
+        part1 += region.area() * region.perimeter();
+        part2 += region.area() * region.sides();
     }
 
-    println!("Output: {}", output);
+    println!("Part 1: {}", part1);
+    println!("Part 2: {}", part2);
 }
