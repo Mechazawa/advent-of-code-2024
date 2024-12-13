@@ -52,7 +52,7 @@ impl Grid {
             for col in 0..self.cols {
                 let point = Point(row, col);
 
-                if self.get(point).unwrap() != MAPPED_CHAR {
+                if self.get(point).unwrap_or(MAPPED_CHAR) != MAPPED_CHAR {
                     return Some(point);
                 }
             }
