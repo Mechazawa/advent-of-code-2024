@@ -22,4 +22,3 @@ const output = Array
     .reduce((a, b) => a * b)
 
 console.log(output)
-
