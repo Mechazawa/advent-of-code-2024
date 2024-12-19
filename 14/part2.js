@@ -34,7 +34,7 @@ const tree = [
     "#.............................#",
     "#.............................#",
     "###############################",
-].map(row => row.split('').map(x => x === '.'));
+];
 
 const input = Array
     .from(require('fs')
@@ -42,15 +42,30 @@ const input = Array
         .trim()
         .matchAll(/p=(-?\d+),(-?\d+).+?(-?\d+),(-?\d+)/g))
     .map(match => match.map(Number))
-    .map(([, px, py, vx, vy]) => {px, py, vx, vy});
+    .map(([, px, py, vx, vy]) => ({px, py, vx, vy}));
 
 function test(steps) {
-    const treeCopy = tree.map(row => row.slice());
+    let area = new Array(height).fill().map(() => new Array(width).fill("."));
 
-    input.map(({px, py, vx, vy}) => {
-        px = (width * steps + px + vx * steps) % width;
-        py = (height * steps + py + vy * steps) % height;
-    });
+    for(const {px, py, vx, vy} of input) {
+        const x = (width * steps + px + vx * steps) % width;
+        const y = (height * steps + py + vy * steps) % height;
+
+        area[y][x] = '#';
+    }
+
+    return area
+        .map(row => row.join(""))
+        .some((_, y, lines) =>
+            y + tree.length < height &&
+            tree.every((line, i) => lines[i + y].includes(line))
+        );
 }
 
-console.log(output)
+let steps = 0;
+
+while(!test(steps)) {
+    steps++;
+}
+
+console.log(steps)
