@@ -5,6 +5,7 @@ const input = require('fs')
     .filter(x => x)
     .map(BigInt)
 
+const price = secret => Number(secret % 10n);
 const prune = value => value % 16777216n;
 const mix = (secret, value) => value ^ secret
 
@@ -32,11 +33,6 @@ function insert(sequence, value, secret) {
     }
 }
 
-function price(secret) {
-    const str = String(secret);
-
-    return Number(str[str.length - 1])
-}
 
 function permute(secret) {
     const original = secret;
@@ -69,9 +65,12 @@ const sorted = Array.from(buckets.entries())
     ]))
     .sort((a, b) => b[1] - a[1]);
 
+console.log("Top 10 sequences")
+const top10 = [];
 
 for (let i = 0; i < 10; i++) {
-    const [key, value] = sorted[i];
-
-    console.log(key, value)
+    const [sequence, value] = sorted[i];
+    top10.push({sequence, value});
 }
+
+console.table(top10)
