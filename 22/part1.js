@@ -1,9 +1,4 @@
 const iterations = 2000;
-const input = require('fs')
-    .readFileSync(0, 'utf-8')
-    .split('\n')
-    .filter(x => x)
-    .map(BigInt)
 
 const repeat = (fn, input, times) => {
     let output = fn(input);
@@ -26,8 +21,13 @@ function next(secret) {
     return secret;
 }
 
-const output = input
+
+const output = require('fs')
+    .readFileSync(0, 'utf-8')
+    .trim()
+    .split('\n')
+    .map(BigInt)
     .map(value => repeat(next, value, iterations))
-    .reduce((a, c) => a + c)
+    .reduce((a, c) => a + c);
 
 console.log(Number(output))
