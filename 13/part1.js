@@ -32,6 +32,8 @@ function minimizeSum(O, X, Y) {
 console.log([...input.matchAll(/^.+X\+(\d+),\s*Y\+(\d+)$\n^.+X\+(\d+),\s*Y\+(\d+)$\n.+X=(\d+),\s*Y=(\d+)/gm)].reduce((a, match) => {
     const [, X1, Y1, X2, Y2, XO, YO] = match.map(Number);
 
+    console.log({X1, Y1, X2, Y2, XO, YO});
+
     const resultX = minimizeSum(XO, X1, X2);
     const resultY = minimizeSum(YO, Y1, Y2);
 
